@@ -91,21 +91,15 @@ SANITY_SUBSET := $(TEST_TOOL_ROOTS) $(TEST_ROOTS)
 # This section contains the build rules for all binaries that have special build rules.
 # See makefile.default.rules for the default build rules.
 
-DEPS := *.h
+# Build the intermediate object file.
+$(OBJDIR)trace$(OBJ_SUFFIX): trace.cpp
+	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
-OBJS := ${OBJDIR}main.o
+# Build the intermediate object file.
+$(OBJDIR)main$(OBJ_SUFFIX): main.cpp trace.h
+	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
-$(OBJDIR)%.o: %.c $(DEPS)
-	$(CXX) $(TOOL_CXXFLAGS_NOOPT) $(COMP_OBJ)$@ $<
+# Build the tool as a dll (shared object).
+$(OBJDIR)pin_locks$(PINTOOL_SUFFIX): $(OBJDIR)trace$(OBJ_SUFFIX) $(OBJDIR)main$(OBJ_SUFFIX)
+	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $(^:%.h=) $(TOOL_LPATHS) $(TOOL_LIBS)
 
-$(OBJDIR)pin_locks$(PINTOOL_SUFFIX): $(OBJS)
-	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $< $(TOOL_LPATHS) $(TOOL_LIBS)
-
-# # Build the intermediate object file.
-# $(OBJDIR)main$(OBJ_SUFFIX): main.cpp
-# 	$(CXX) $(TOOL_CXXFLAGS_NOOPT) $(COMP_OBJ)$@ $<
-# 
-# # Build the tool as a dll (shared object).
-# $(OBJDIR)main$(PINTOOL_SUFFIX): $(OBJDIR)YourTool$(OBJ_SUFFIX)
-# 	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $< $(TOOL_LPATHS) $(TOOL_LIBS)
-# 
