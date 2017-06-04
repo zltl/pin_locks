@@ -16,7 +16,7 @@ int  main(int argc, char *argv[]) {
 
 	PIN_InitSymbols();
 
-	if( PIN_Init(argc,argv) ) {
+	if (PIN_Init(argc,argv)) {
 		return Usage();
 	}
 
@@ -29,6 +29,7 @@ int  main(int argc, char *argv[]) {
 
 	std::cout.write(trace_header.c_str(),trace_header.size());
 
+	InitTrace();
 	TRACE_AddInstrumentFunction(Trace, 0);
 	PIN_AddFiniFunction(Fini, 0);
 

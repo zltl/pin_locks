@@ -91,15 +91,16 @@ SANITY_SUBSET := $(TEST_TOOL_ROOTS) $(TEST_ROOTS)
 # This section contains the build rules for all binaries that have special build rules.
 # See makefile.default.rules for the default build rules.
 
-# Build the intermediate object file.
-$(OBJDIR)trace$(OBJ_SUFFIX): trace.cpp
+$(OBJDIR)lock_graph$(OBJ_SUFFIX): lock_graph.cpp lock_graph.h
 	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
-# Build the intermediate object file.
+$(OBJDIR)trace$(OBJ_SUFFIX): trace.cpp lock_graph.h
+	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
+
 $(OBJDIR)main$(OBJ_SUFFIX): main.cpp trace.h
 	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 # Build the tool as a dll (shared object).
-$(OBJDIR)pin_locks$(PINTOOL_SUFFIX): $(OBJDIR)trace$(OBJ_SUFFIX) $(OBJDIR)main$(OBJ_SUFFIX)
+$(OBJDIR)pin_locks$(PINTOOL_SUFFIX): $(OBJDIR)trace$(OBJ_SUFFIX) $(OBJDIR)main$(OBJ_SUFFIX) $(OBJDIR)lock_graph$(OBJ_SUFFIX)
 	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $(^:%.h=) $(TOOL_LPATHS) $(TOOL_LIBS)
 

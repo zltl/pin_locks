@@ -2,8 +2,11 @@
 #include <pthread.h>
 #include <iostream>
 #include "pin.H"
+#include "lock_graph.h"
 
 string invalid = "invalid_rtn";
+
+LockGraph lg;
 
 const string *Target2String(ADDRINT target) {
 	string name = RTN_FindNameByAddress(target);
@@ -15,17 +18,27 @@ const string *Target2String(ADDRINT target) {
 
 static PIN_MUTEX pm;
 
+void InitTrace() {
+	PIN_MutexInit(&pm);
+}
+
 VOID do_call_args(const string *s, ADDRINT arg0) {
 	PIN_MutexLock(&pm);
+
 	OS_THREAD_ID id = PIN_GetTid();
 	std::cout << id << " " << *s << "(" << arg0 << ",...)" << endl;
 
 	if (*s == "pthread_mutex_lock@plt") {
 		// TODO schedule
-		// TODO set lock graph
-		// TODO check
+		int r = lg.Lock(id, arg0);
+		if (r == LockGraph::LOCK_DEAD_LOCK) {
+			std::cout << "DEAD_LOCK" << std::endl;
+		}
 	} else if (*s == "pthread_mutex_unlock@plt") {
-		// TODO clear lock graph
+		int r = lg.Unlock(id, arg0);
+		if (r == LockGraph::LOCK_UNLOCK_UNLOCK) {
+			// std::cout << "LOCK_UNLOCK_UNLOCK" << std::endl;
+		}
 	}
 
 	PIN_MutexUnlock(&pm);
@@ -42,8 +55,6 @@ VOID do_call_args_indirect(ADDRINT target, BOOL taken, ADDRINT arg0) {
 }
 
 VOID Trace(TRACE trace, VOID *v) {
-	PIN_MutexInit(&pm);
-
 	for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl)) {
 		INS tail = BBL_InsTail(bbl);
 		if (INS_IsCall(tail)) {

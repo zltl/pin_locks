@@ -22,6 +22,10 @@ public:
 	int Unlock(UL tid, UL maddr);
 private:
 
+	bool CheckDeadLock(int u);
+
+	bool dfs(int u, std::vector<bool> flags);
+
 	UL GetTidMin(UL tid);
 	UL GetMidMin(UL mid);
 

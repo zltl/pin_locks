@@ -1,6 +1,7 @@
 #ifndef __TRACE_H__
 #define __TRACE_H__
 
+void InitTrace();
 VOID Trace(TRACE trace, VOID *v);
 VOID Img(IMG img, VOID *v);
 
