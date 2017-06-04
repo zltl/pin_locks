@@ -31,3 +31,5 @@
 *.out
 *.app
 obj-intel64/*
+test/mutex
+test/dead
