@@ -10,8 +10,10 @@ void *threadadd(void * arg) {
 	for (int j = 0; j < 10; j++) {
 		// sleep(1);
 		pthread_mutex_lock(&mutex);
+		pthread_mutex_lock(&mutex2);
 		i++;
 		// std::cout << "+" << std::endl;
+		pthread_mutex_unlock(&mutex2);
 		pthread_mutex_unlock(&mutex);
 	}
 }
@@ -19,10 +21,12 @@ void *threadadd(void * arg) {
 void *threadsub(void *arg) {
 	for (int j = 0; j < 10; j++) {
 		// sleep(1);
+		pthread_mutex_lock(&mutex2);
 		pthread_mutex_lock(&mutex);
 		// std::cout << "-" << std::endl;
 		i--;
 		pthread_mutex_unlock(&mutex);
+		pthread_mutex_unlock(&mutex2);
 	}
 }
 

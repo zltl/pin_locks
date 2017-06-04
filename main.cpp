@@ -31,6 +31,7 @@ int  main(int argc, char *argv[]) {
 
 	InitTrace();
 	TRACE_AddInstrumentFunction(Trace, 0);
+	IMG_AddInstrumentFunction(ImageLoad, 0);
 	PIN_AddFiniFunction(Fini, 0);
 
 	PIN_StartProgram();

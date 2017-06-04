@@ -3,6 +3,6 @@
 
 void InitTrace();
 VOID Trace(TRACE trace, VOID *v);
-VOID Img(IMG img, VOID *v);
+VOID ImageLoad(IMG img, VOID *v);
 
 #endif /* __TRACE_H__ */

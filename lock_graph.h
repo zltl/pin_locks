@@ -22,17 +22,13 @@ public:
 	int Unlock(UL tid, UL maddr);
 private:
 
-	bool CheckDeadLock(int u);
-
-	bool dfs(int u, std::vector<bool> flags);
+	bool CheckDeadLock(int t);
 
 	UL GetTidMin(UL tid);
 	UL GetMidMin(UL mid);
 
-	int AddEdge(int u, int v);
-	int DeleteEdge(int u, int v);
-	int EnsureNode(int u);
 	int EnsureM2t(int m);
+	int EnsureT2m(int t);
 
 	std::map<UL, int> tid2min;
 	std::map<int, UL> min2tid;
@@ -42,8 +38,10 @@ private:
 	std::map<int, UL> min2mid;
 	int midiota;
 
+	// mutex owner thread
 	std::vector<int> m2t;
-	std::vector<std::vector<int> > edge;
+	// thread want mutex
+	std::vector<int> t2m;
 };
 
 #endif /* __LOCK_GRAPH_H__ */
