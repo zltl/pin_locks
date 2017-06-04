@@ -10,4 +10,4 @@ dead: dead.cpp
 .PHONY: clean
 
 clean:
-	rm -f mutex *.o
+	rm -f *.o mutex dead
