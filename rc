@@ -6,8 +6,15 @@
 
 PIN_ROOT="/home/ltl/src/pin-3.2-81205-gcc-linux"
 
+THIS_DIR=$(cd "$(dirname "$0")"; pwd)
+PREDIR=`pwd`
+
+cd $THIS_DIR
+
 if [ $1 = "make" ]; then
 	make PIN_ROOT=${PIN_ROOT} ${@:2}
 elif [ $1 = "run" ]; then
 	${PIN_ROOT}/pin -ifeellucky -t obj-intel64/pin_locks.so -- ${@:2}
 fi
+
+cd $PREDIR

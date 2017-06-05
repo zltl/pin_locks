@@ -93,10 +93,12 @@ SANITY_SUBSET := $(TEST_TOOL_ROOTS) $(TEST_ROOTS)
 
 DEPS := *.h
 
+OBJS := ${OBJDIR}main.o
+
 $(OBJDIR)%.o: %.c $(DEPS)
 	$(CXX) $(TOOL_CXXFLAGS_NOOPT) $(COMP_OBJ)$@ $<
 
-$(OBJDIR)pin_locks$(PINTOOL_SUFFIX): $(OBJDIR)*.o
+$(OBJDIR)pin_locks$(PINTOOL_SUFFIX): $(OBJS)
 	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $< $(TOOL_LPATHS) $(TOOL_LIBS)
 
 # # Build the intermediate object file.
