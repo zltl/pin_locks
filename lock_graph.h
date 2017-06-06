@@ -9,9 +9,10 @@
 class LockGraph {
 public:
 	enum {
-		LOCK_SECCESS,
+		LOCK_SUCCESS,
 		LOCK_OTHER_HOLD,
-		LOCK_DEAD_LOCK
+		LOCK_DEAD_LOCK,
+		LOCK_UNLOCK_UNLOCK
 	};
 
 	LockGraph();
@@ -27,6 +28,7 @@ private:
 	int AddEdge(int u, int v);
 	int DeleteEdge(int u, int v);
 	int EnsureNode(int u);
+	int EnsureM2t(int m);
 
 	std::map<UL, int> tid2min;
 	std::map<int, UL> min2tid;

@@ -12,10 +12,29 @@ LockGraph::~LockGraph() { }
 
 int LockGraph::Lock(UL tid, UL maddr) {
 	int t = GetTidMin(tid), m = GetMidMin(maddr);
+	int mt = m2t[m];
+	if (mt != 0) {
+		AddEdge(t, mt);
+		// TODO check
+		return LOCK_OTHER_HOLD;
+	} else {
+		m2t[m] = t;
+		return LOCK_SUCCESS;
+	}
 }
 
 int LockGraph::Unlock(UL tid, UL maddr) {
-
+	int t = GetTidMin(tid), m = GetMidMin(maddr);
+	EnsureM2t(m);
+	int mt = m2t[m];
+	if (mt == 0) {
+		// TODO ERROR not lock
+		return LOCK_UNLOCK_UNLOCK;
+	} else {
+		DeleteEdge(t, mt);
+		m2t[m] = 0;
+		return LOCK_SUCCESS;
+	}
 }
 
 int LockGraph::AddEdge(int u, int v) {
@@ -31,7 +50,6 @@ int LockGraph::DeleteEdge(int u, int v) {
 	for (vector<int>::iterator iter = edge[u].begin(); iter != edge[u].end(); iter++) {
 		if (*iter == v) {
 			edge[u].erase(iter);
-			// no duplicate edge
 			return 0;
 		}
 	}
@@ -42,6 +60,13 @@ int LockGraph::EnsureNode(int u) {
 	// id begin with 0, so <=, not <
 	while (edge.size() <= u) {
 		edge.push_back(vector<int>());
+	}
+	return 0;
+}
+
+int LockGraph::EnsureM2t(int m) {
+	while (m2t.size() <= m) {
+		m2t.push_back(0);
 	}
 	return 0;
 }
