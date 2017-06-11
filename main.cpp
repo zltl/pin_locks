@@ -3,6 +3,7 @@
 #include "pin.H"
 #include "trace.h"
 #include "replace.h"
+#include "schedule.h"
 
 INT32 Usage() {
 	cerr << "This tool produces a call trace." << endl << endl;
@@ -35,6 +36,10 @@ int  main(int argc, char *argv[]) {
 
 	TRACE_AddInstrumentFunction(Trace, 0);
 	IMG_AddInstrumentFunction(ImageLoad, 0);
+
+//	PIN_AddThreadStartFunction(ThreadStart, 0);
+//	PIN_AddThreadFiniFunction(ThreadFini, 0);
+
 	PIN_AddFiniFunction(Fini, 0);
 
 	PIN_StartProgram();

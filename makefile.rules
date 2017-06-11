@@ -100,11 +100,15 @@ $(OBJDIR)lock_graph$(OBJ_SUFFIX): lock_graph.cpp lock_graph.h
 $(OBJDIR)trace$(OBJ_SUFFIX): trace.cpp
 	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
-$(OBJDIR)main$(OBJ_SUFFIX): main.cpp trace.h replace.h
+$(OBJDIR)schedule$(OBJ_SUFFIX): schedule.cpp schedule.h
+	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
+
+$(OBJDIR)main$(OBJ_SUFFIX): main.cpp trace.h replace.h schedule.h
 	$(CC) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 # Build the tool as a dll (shared object).
 $(OBJDIR)pin_locks$(PINTOOL_SUFFIX): $(OBJDIR)trace$(OBJ_SUFFIX) \
-		$(OBJDIR)main$(OBJ_SUFFIX) $(OBJDIR)lock_graph$(OBJ_SUFFIX) $(OBJDIR)replace$(OBJ_SUFFIX)
+		$(OBJDIR)main$(OBJ_SUFFIX) $(OBJDIR)lock_graph$(OBJ_SUFFIX) \
+		$(OBJDIR)replace$(OBJ_SUFFIX) $(OBJDIR)schedule$(OBJ_SUFFIX)
 	$(LINKER) $(TOOL_LDFLAGS_NOOPT) $(LINK_EXE)$@ $(^:%.h=) $(TOOL_LPATHS) $(TOOL_LIBS)
 
