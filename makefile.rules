@@ -94,13 +94,13 @@ SANITY_SUBSET := $(TEST_TOOL_ROOTS) $(TEST_ROOTS)
 $(OBJDIR)replace$(OBJ_SUFFIX): replace.cpp lock_graph.h
 	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
-$(OBJDIR)lock_graph$(OBJ_SUFFIX): lock_graph.cpp lock_graph.h
+$(OBJDIR)lock_graph$(OBJ_SUFFIX): lock_graph.cpp lock_graph.h tools.h
 	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 $(OBJDIR)trace$(OBJ_SUFFIX): trace.cpp
 	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
-$(OBJDIR)schedule$(OBJ_SUFFIX): schedule.cpp schedule.h
+$(OBJDIR)schedule$(OBJ_SUFFIX): schedule.cpp schedule.h tools.h
 	$(CXX) $(TOOL_CXXFLAGS) $(COMP_OBJ)$@ $<
 
 $(OBJDIR)main$(OBJ_SUFFIX): main.cpp trace.h replace.h schedule.h

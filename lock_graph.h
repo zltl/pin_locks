@@ -3,8 +3,7 @@
 
 #include <map>
 #include <vector>
-
-#define UL unsigned long
+#include "tools.h"
 
 class LockGraph {
 public:

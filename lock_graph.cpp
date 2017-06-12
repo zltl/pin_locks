@@ -1,6 +1,7 @@
 #include "lock_graph.h"
 #include <map>
 #include <iostream>
+#include "tools.h"
 
 using std::vector;
 

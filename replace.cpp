@@ -3,9 +3,11 @@
 #include <iostream>
 #include "pin.H"
 #include "lock_graph.h"
+#include "schedule.h"
 
 static PIN_MUTEX check_mutex;
 LockGraph lg;
+static Schedule sd;
 
 void InitReplace() {
 	PIN_MutexInit(&check_mutex);
@@ -17,15 +19,16 @@ int my_lock(CONTEXT* ctxt, AFUNPTR pf_lock, pthread_mutex_t *m) {
 	while (1) {
 		PIN_MutexLock(&check_mutex);
 
-		// TODO schedule
-		int r = lg.Lock(id, (unsigned long)m);
-		if (r == LockGraph::LOCK_DEAD_LOCK) {
-			std::cout << "DEAD_LOCK" << std::endl;
-			PIN_MutexUnlock(&check_mutex);
-			break;
-		} else if (r == LockGraph::LOCK_SUCCESS) {
-			PIN_MutexUnlock(&check_mutex);
-			break;
+		if (sd.Choose(id)) {
+			int r = lg.Lock(id, (unsigned long)m);
+			if (r == LockGraph::LOCK_DEAD_LOCK) {
+				std::cout << "DEAD_LOCK" << std::endl;
+				PIN_MutexUnlock(&check_mutex);
+				break;
+			} else if (r == LockGraph::LOCK_SUCCESS) {
+				PIN_MutexUnlock(&check_mutex);
+				break;
+			}
 		}
 
 		PIN_MutexUnlock(&check_mutex);
@@ -90,5 +93,17 @@ VOID ImageLoad(IMG img, VOID *v) {
 				IARG_ORIG_FUNCPTR, IARG_FUNCARG_ENTRYPOINT_VALUE, 0,
 				IARG_END);
 	}
+}
+
+VOID ThreadStart(THREADID threadid, CONTEXT *ctxt, INT32 flags, VOID *v) {
+	PIN_MutexLock(&check_mutex);
+	sd.ThreadStart(PIN_GetTid());
+	PIN_MutexUnlock(&check_mutex);
+}
+
+VOID ThreadFini(THREADID threadid, const CONTEXT *ctxt, INT32 code, VOID *v) {
+	PIN_MutexLock(&check_mutex);
+	sd.ThreadEnd(PIN_GetTid());
+	PIN_MutexUnlock(&check_mutex);
 }
 
