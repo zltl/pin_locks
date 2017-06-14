@@ -34,7 +34,7 @@ int  main(int argc, char *argv[]) {
 	InitTrace();
 	InitReplace();
 
-	TRACE_AddInstrumentFunction(Trace, 0);
+	// TRACE_AddInstrumentFunction(Trace, 0);
 	IMG_AddInstrumentFunction(ImageLoad, 0);
 
 	PIN_AddThreadStartFunction(ThreadStart, 0);

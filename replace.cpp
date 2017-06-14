@@ -16,22 +16,16 @@ void InitReplace() {
 int my_lock(CONTEXT* ctxt, AFUNPTR pf_lock, pthread_mutex_t *m) {
 	OS_THREAD_ID id = PIN_GetTid();
 	std::cout << id << " my_lock( " << m << " )"<< std::endl;
-	while (1) {
-		PIN_MutexLock(&check_mutex);
 
-		if (sd.Choose(id)) {
-			int r = lg.Lock(id, (unsigned long)m);
-			if (r == LockGraph::LOCK_DEAD_LOCK) {
-				std::cout << "DEAD_LOCK" << std::endl;
-				PIN_MutexUnlock(&check_mutex);
-				break;
-			} else if (r == LockGraph::LOCK_SUCCESS) {
-				PIN_MutexUnlock(&check_mutex);
-				break;
-			}
-		}
+	sd.Choose(id);
 
-		PIN_MutexUnlock(&check_mutex);
+	PIN_MutexLock(&check_mutex);
+	int r = lg.Lock(id, (unsigned long)m);
+	PIN_MutexUnlock(&check_mutex);
+	if (r == LockGraph::LOCK_DEAD_LOCK) {
+		std::cout << "DEAD_LOCK" << std::endl;
+		exit(1);
+	} else if (r == LockGraph::LOCK_SUCCESS) {
 	}
 
 	int res = 0;
@@ -96,14 +90,10 @@ VOID ImageLoad(IMG img, VOID *v) {
 }
 
 VOID ThreadStart(THREADID threadid, CONTEXT *ctxt, INT32 flags, VOID *v) {
-	PIN_MutexLock(&check_mutex);
 	sd.ThreadStart(PIN_GetTid());
-	PIN_MutexUnlock(&check_mutex);
 }
 
 VOID ThreadFini(THREADID threadid, const CONTEXT *ctxt, INT32 code, VOID *v) {
-	PIN_MutexLock(&check_mutex);
 	sd.ThreadEnd(PIN_GetTid());
-	PIN_MutexUnlock(&check_mutex);
 }
 

@@ -33,3 +33,4 @@
 obj-intel64/*
 test/mutex
 test/dead
+tags
