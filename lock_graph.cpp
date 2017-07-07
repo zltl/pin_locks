@@ -1,6 +1,7 @@
 #include "lock_graph.h"
 #include <map>
 #include <iostream>
+#include <fstream>
 #include "tools.h"
 
 using std::vector;
@@ -8,6 +9,7 @@ using std::vector;
 LockGraph::LockGraph() {
 	tidiota = 1;
 	midiota = 1;
+	dlt = 0;
 }
 
 LockGraph::~LockGraph() { }
@@ -86,3 +88,24 @@ UL LockGraph::GetMidMin(UL mid) {
 	return m;
 }
 
+void LockGraph::draw(std::string path) {
+	std::fstream fs;
+	fs.open(path.c_str(), std::fstream::out);
+
+	fs <<  "digraph g {" << std::endl;
+	fs << "node[shape=record, height=.1]" << std::endl;
+
+	int cur = dlt;
+	fs << "n" << cur << "[label=\"" << min2tid[cur] << "\"]" << std::endl;
+	while (t2m[cur] != 0 && m2t[t2m[cur]] != dlt) {
+		int p = cur;
+		cur = m2t[t2m[cur]];
+		fs << "n" << cur << "[label=\"" << min2tid[cur] << "\"]" << std::endl;
+		fs << "n" << cur << "[label=\"" << min2tid[p] << "\"]"
+			<< "->" << "n" << cur << "[label=\"" << min2tid[cur] << "\"]"
+			<< "[label=\"" << min2mid[t2m[p]] << "\"]" << std::endl;
+	}
+	fs << "}" << std::endl;
+
+	fs.close();
+}

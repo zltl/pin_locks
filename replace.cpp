@@ -24,6 +24,7 @@ int my_lock(CONTEXT* ctxt, AFUNPTR pf_lock, pthread_mutex_t *m) {
 	PIN_MutexUnlock(&check_mutex);
 	if (r == LockGraph::LOCK_DEAD_LOCK) {
 		std::cout << "DEAD_LOCK" << std::endl;
+		lg.draw("lock_graph.dot");
 		exit(1);
 	} else if (r == LockGraph::LOCK_SUCCESS) {
 	}

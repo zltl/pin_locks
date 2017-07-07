@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 #include "tools.h"
 
 class LockGraph {
@@ -19,9 +20,12 @@ public:
 
 	int Lock(UL tid, UL maddr);
 	int Unlock(UL tid, UL maddr);
+
+	void draw(std::string path);
 private:
 
 	bool CheckDeadLock(int t);
+	int dlt;
 
 	UL GetTidMin(UL tid);
 	UL GetMidMin(UL mid);
