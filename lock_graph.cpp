@@ -100,10 +100,8 @@ void LockGraph::draw(std::string path) {
 	while (t2m[cur] != 0 && m2t[t2m[cur]] != dlt) {
 		int p = cur;
 		cur = m2t[t2m[cur]];
-		fs << "n" << cur << "[label=\"" << min2tid[cur] << "\"]" << std::endl;
-		fs << "n" << cur << "[label=\"" << min2tid[p] << "\"]"
-			<< "->" << "n" << cur << "[label=\"" << min2tid[cur] << "\"]"
-			<< "[label=\"" << min2mid[t2m[p]] << "\"]" << std::endl;
+		fs << "n" << cur << " [label=\"" << min2tid[cur] << "\"]" << std::endl;
+		fs << "n" << p << " -> " << "n" << cur << " [label=\"" << min2mid[t2m[p]] << "\"]" << std::endl;
 	}
 	fs << "}" << std::endl;
 
