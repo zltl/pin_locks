@@ -20,7 +20,7 @@ if [ $1 = "make" ]; then
 elif [ $1 = "run" ]; then
 	${PIN_ROOT}/pin $IFEELLUCKY -t obj-intel64/pin_locks.so -- ${@:2}
 elif [ $1 = "test" ]; then
-	${PIN_ROOT}/pin $IFEELLUCKY -t obj-intel64/pin_locks.so -- ./test/${@:2}
+	${PIN_ROOT}/pin $IFEELLUCKY -t obj-intel64/pin_locks.so -- ${@:2}
 fi
 
 cd $PREDIR
