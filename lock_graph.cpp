@@ -22,6 +22,7 @@ int LockGraph::Lock(UL tid, UL maddr) {
 		if (t2m[t] != m) {
 			t2m[t] = m;
 			if (CheckDeadLock(t)) {
+				dlt = t;
 				return LOCK_DEAD_LOCK;
 			}
 		}
@@ -48,6 +49,7 @@ bool LockGraph::CheckDeadLock(int t) {
 	int cur = t;
 	while (t2m[cur] != 0 && m2t[t2m[cur]] != t) {
 		cur = m2t[t2m[cur]];
+		std::cout << "cur=" << cur << std::endl;
 	}
 
 	return m2t[t2m[cur]] == t;
@@ -103,6 +105,7 @@ void LockGraph::draw(std::string path) {
 		fs << "n" << cur << " [label=\"" << min2tid[cur] << "\"]" << std::endl;
 		fs << "n" << p << " -> " << "n" << cur << " [label=\"" << min2mid[t2m[p]] << "\"]" << std::endl;
 	}
+	fs << "n" << cur << " -> " << "n" << dlt << " [label=\"" << min2mid[t2m[cur]] << "\"]" << std::endl;
 	fs << "}" << std::endl;
 
 	fs.close();
