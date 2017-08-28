@@ -24,10 +24,17 @@ class Application(tk.Frame):
         #self.quit.grid(row=0, column=3)
 
     def start_check(self):
-        print("hi there, everyone!")
-        self.show_result()
+        print("start check")
+        bug = false
+        for i in range(0, 1000):
+            bug = oneRound(self.hi_text.get())
+            if bug:
+                break
+        self.show_result(bug)
+    def on_round(self, cmd):
+        pass
 
-    def show_result(self):
+    def show_result(self, bug):
         t = tk.Toplevel(self)
         t.wm_title("结果")
         l = tk.Label(t, text="This is result")
