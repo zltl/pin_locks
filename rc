@@ -14,6 +14,8 @@ IFEELLUCKY="-ifeellucky"
 
 cd $THIS_DIR
 
+rm -f lock_graph.dot
+
 if [ $1 = "make" ]; then
 	make -C test ${@:2}
 	make PIN_ROOT=${PIN_ROOT} ${@:2}

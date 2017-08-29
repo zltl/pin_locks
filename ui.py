@@ -1,6 +1,9 @@
 #!/bin/python
 
 import tkinter as tk
+from tkinter import PhotoImage
+import os.path
+import os
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -25,20 +28,31 @@ class Application(tk.Frame):
 
     def start_check(self):
         print("start check")
-        bug = false
+        bug = False
         for i in range(0, 1000):
-            bug = oneRound(self.hi_text.get())
+            bug = self.one_round(self.hi_text.get())
             if bug:
                 break
         self.show_result(bug)
-    def on_round(self, cmd):
-        pass
+    def one_round(self, cmd):
+        os.system("./rc test " + cmd + " >checker.log")
+        if os.path.isfile("./lock_graph.dot"):
+            return True
+        return False
 
     def show_result(self, bug):
         t = tk.Toplevel(self)
         t.wm_title("结果")
-        l = tk.Label(t, text="This is result")
-        l.grid()
+        if (bug == False):
+            l = tk.Label(t, text="没有发现错误")
+            l.grid()
+        else:
+            os.system("dot lock_graph.dot -Tgif -o lock_graph.gif")
+            photo = PhotoImage(file="lock_graph.gif")
+            lb=tk.Label(t, image = photo)
+            lb.grid(row=4, column=1)
+            # l = tk.Label(t, text="xxxxx")
+            l.grid()
 
 if __name__ == "__main__":
     root = tk.Tk()
