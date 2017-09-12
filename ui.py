@@ -29,7 +29,7 @@ class Application(tk.Frame):
     def start_check(self):
         print("start check")
         bug = False
-        for i in range(0, 1000):
+        for i in range(0, 3):
             bug = self.one_round(self.hi_text.get())
             if bug:
                 break
@@ -51,11 +51,9 @@ class Application(tk.Frame):
             photo = PhotoImage(file="lock_graph.gif")
             lb=tk.Label(t, image = photo)
             lb.grid(row=4, column=1)
-            # l = tk.Label(t, text="xxxxx")
-            l.grid()
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.wm_title("量天尺")
+    root.wm_title("死锁检测")
     app = Application(master=root)
     app.mainloop()
